@@ -1,66 +1,470 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mis Sílabos - FINESI</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: #f0f4f8; }
-    header { background: #1a237e; color: white; padding: 24px; text-align: center; }
-    header h1 { font-size: 1.8rem; }
-    header p { margin-top: 6px; opacity: 0.8; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 30px; max-width: 1200px; margin: auto; }
-    .card { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
-    .card-header { background: #283593; color: white; padding: 14px 18px; font-weight: bold; }
-    .card iframe { width: 100%; height: 420px; border: none; display: block; }
-    .card-footer { padding: 10px 18px; background: #f5f5f5; text-align: right; }
-    .card-footer a { color: #1a237e; font-size: 0.85rem; text-decoration: none; font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Académico — Alex Castillo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e28;
+    --border: rgba(255,255,255,0.07);
+    --gold: #c9a84c;
+    --gold2: #e8c97a;
+    --text: #e8e8e8;
+    --muted: #7a7f8e;
+    --accent: #2a3045;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .topbar .logo {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: #0d0f14;
+  }
+  .topbar .uni { font-size: 13px; color: var(--muted); }
+  .topbar .uni strong { color: var(--text); font-weight: 500; }
+  .topbar .badge {
+    margin-left: auto;
+    background: rgba(201,168,76,0.15);
+    color: var(--gold2);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 32px 28px;
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-left { flex: 1; min-width: 220px; }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .hero h1 span { color: var(--gold2); }
+  .hero-sub { font-size: 14px; color: var(--muted); }
+
+  /* STATS STRIP */
+  .stats {
+    display: flex;
+    gap: 1px;
+    background: var(--border);
+    flex-wrap: wrap;
+  }
+  .stat {
+    flex: 1;
+    min-width: 120px;
+    background: var(--bg2);
+    padding: 20px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+  .stat .val {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold2);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* MAIN LAYOUT */
+  .main {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 180px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+  }
+  .sidebar-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    padding: 0 20px 12px;
+    font-weight: 500;
+  }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-left: 3px solid transparent;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .sidebar-item.active {
+    background: var(--accent);
+    border-left-color: var(--gold);
+    color: var(--text);
+  }
+  .sidebar-item:hover:not(.active) { background: rgba(255,255,255,0.03); color: var(--text); }
+  .sidebar-item .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+  .sidebar-item.active .dot { opacity: 1; }
+
+  /* CONTENT */
+  .content { padding: 28px 32px; }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .section-head h2 { font-size: 16px; font-weight: 500; }
+  .section-head .line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-head .tag {
+    font-size: 11px;
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* PDF CARDS */
+  .pdf-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .pdf-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .pdf-card:hover {
+    border-color: rgba(201,168,76,0.4);
+    transform: translateY(-2px);
+  }
+  .pdf-card .pdf-icon {
+    width: 38px; height: 38px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .pdf-card .pdf-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .pdf-card .pdf-meta {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .pdf-card .pdf-meta::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+  .pdf-card a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--gold2);
+    text-decoration: none;
+    border-radius: 6px;
+    padding: 8px 0;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background 0.15s;
+    margin-top: auto;
+  }
+  .pdf-card a:hover { background: rgba(201,168,76,0.2); }
+  .pdf-card a svg { width: 14px; height: 14px; }
+
+  /* INFO CARD */
+  .info-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .info-item .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+  .info-item .val { font-size: 13px; color: var(--text); font-weight: 400; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 32px;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg2);
+    text-align: center;
+  }
+  footer strong { color: var(--gold); }
+
+  @media (max-width: 700px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+    .hero { padding: 24px 20px; }
+    .content { padding: 20px; }
+    .stats { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
 </head>
 <body>
-<header>
-  <h1>📚 Mis Sílabos — FINESI GITCS 2026</h1>
-  <p>Cursos del semestre</p>
-</header>
-<div class="grid">
 
-  <div class="card">
-    <div class="card-header">Aprendizaje No Supervisado</div>
-    <iframe src="finesi/gitcs2026/aprendizaje%20no%20supervisado.pdf"></iframe>
-    <div class="card-footer"><a href="finesi/gitcs2026/aprendizaje%20no%20supervisado.pdf" target="_blank">Abrir ↗</a></div>
+<div class="topbar">
+  <div class="logo">UNA</div>
+  <div class="uni">
+    <strong>Universidad Nacional del Altiplano</strong> &nbsp;·&nbsp;
+    <span class="uni">Facultad de Ingeniería Estadística e Informática</span>
   </div>
-
-  <div class="card">
-    <div class="card-header">Arquitectura de Redes y Protocolos</div>
-    <iframe src="finesi/gitcs2026/arquitectura%20de%20redes%20y%20protocolos.pdf"></iframe>
-    <div class="card-footer"><a href="finesi/gitcs2026/arquitectura%20de%20redes%20y%20protocolos.pdf" target="_blank">Abrir ↗</a></div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Gestión de Proyectos TICS</div>
-    <iframe src="finesi/gitcs2026/gestion%20de%20proyectos%20tics.pdf"></iframe>
-    <div class="card-footer"><a href="finesi/gitcs2026/gestion%20de%20proyectos%20tics.pdf" target="_blank">Abrir ↗</a></div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Modelos Lineales</div>
-    <iframe src="finesi/gitcs2026/modelos%20lineales.pdf"></iframe>
-    <div class="card-footer"><a href="finesi/gitcs2026/modelos%20lineales.pdf" target="_blank">Abrir ↗</a></div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Regresión Lineal</div>
-    <iframe src="finesi/gitcs2026/regresion%20lineal.pdf"></iframe>
-    <div class="card-footer"><a href="finesi/gitcs2026/regresion%20lineal.pdf" target="_blank">Abrir ↗</a></div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Series de Tiempo</div>
-    <iframe src="finesi/gitcs2026/series%20de%20tiempo.pdf"></iframe>
-    <div class="card-footer"><a href="finesi/gitcs2026/series%20de%20tiempo.pdf" target="_blank">Abrir ↗</a></div>
-  </div>
-
+  <div class="badge">Semestre 2026-I</div>
 </div>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Portal Académico Estudiantil</div>
+    <h1>Alex Angel <span>Castillo Quilca</span></h1>
+    <div class="hero-sub">Ingeniería Estadística e Informática &nbsp;·&nbsp; Código: 23 63 45</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <div class="val">VI</div>
+    <div class="lbl">Semestre actual</div>
+  </div>
+  <div class="stat">
+    <div class="val">6</div>
+    <div class="lbl">Cursos matriculados</div>
+  </div>
+  <div class="stat">
+    <div class="val">04</div>
+    <div class="lbl">Créditos por curso</div>
+  </div>
+  <div class="stat">
+    <div class="val">2026</div>
+    <div class="lbl">Año académico</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar">
+    <div class="sidebar-title">Navegación</div>
+    <a class="sidebar-item active" href="#">
+      <span class="dot"></span> Sílabos del semestre
+    </a>
+    <a class="sidebar-item" href="#">
+      <span class="dot"></span> Aprendizaje No Supervisado
+    </a>
+    <a class="sidebar-item" href="#">
+      <span class="dot"></span> Arq. de Redes y Protocolos
+    </a>
+    <a class="sidebar-item" href="#">
+      <span class="dot"></span> Gestión de Proyectos TICS
+    </a>
+    <a class="sidebar-item" href="#">
+      <span class="dot"></span> Modelos Lineales
+    </a>
+    <a class="sidebar-item" href="#">
+      <span class="dot"></span> Regresión Lineal
+    </a>
+    <a class="sidebar-item" href="#">
+      <span class="dot"></span> Series de Tiempo
+    </a>
+  </div>
+
+  <div class="content">
+
+    <div class="section-head">
+      <h2>Información del semestre</h2>
+      <div class="line"></div>
+      <div class="tag">2026-I</div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="lbl">Escuela profesional</div>
+          <div class="val">Ing. Estadística e Informática</div>
+        </div>
+        <div class="info-item">
+          <div class="lbl">Programa de estudios</div>
+          <div class="val">Ingeniería Estadística e Informática</div>
+        </div>
+        <div class="info-item">
+          <div class="lbl">Ciclo</div>
+          <div class="val">VI — Estudios de especialidad</div>
+        </div>
+        <div class="info-item">
+          <div class="lbl">Duración del semestre</div>
+          <div class="val">30 Mar → 31 Jul 2026</div>
+        </div>
+        <div class="info-item">
+          <div class="lbl">Modalidad</div>
+          <div class="val">Presencial</div>
+        </div>
+        <div class="info-item">
+          <div class="lbl">Currículo vigente</div>
+          <div class="val">2021 – 2025 V.2.0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Sílabos — descarga por curso</h2>
+      <div class="line"></div>
+      <div class="tag">6 cursos</div>
+    </div>
+
+    <div class="pdf-grid">
+
+      <div class="pdf-card">
+        <div class="pdf-icon">📊</div>
+        <div class="pdf-name">Aprendizaje No Supervisado</div>
+        <div class="pdf-meta">EST314 · Estadística Computacional</div>
+        <a href="finesi/gitcs2026/aprendizaje%20no%20supervisado.pdf" download>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+          Descargar sílabo
+        </a>
+      </div>
+
+      <div class="pdf-card">
+        <div class="pdf-icon">🌐</div>
+        <div class="pdf-name">Arquitectura de Redes y Protocolos</div>
+        <div class="pdf-meta">Redes · Semestre VI</div>
+        <a href="finesi/gitcs2026/arquitectura%20de%20redes%20y%20protocolos.pdf" download>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+          Descargar sílabo
+        </a>
+      </div>
+
+      <div class="pdf-card">
+        <div class="pdf-icon">📋</div>
+        <div class="pdf-name">Gestión de Proyectos TICS</div>
+        <div class="pdf-meta">EST315 · Doc. Melgarejo Bolivar R.P.</div>
+        <a href="finesi/gitcs2026/gestion%20de%20proyectos%20tics.pdf" download>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+          Descargar sílabo
+        </a>
+      </div>
+
+      <div class="pdf-card">
+        <div class="pdf-icon">📈</div>
+        <div class="pdf-name">Modelos Lineales</div>
+        <div class="pdf-meta">Modelos Discretos · Semestre VI</div>
+        <a href="finesi/gitcs2026/modelos%20lineales.pdf" download>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+          Descargar sílabo
+        </a>
+      </div>
+
+      <div class="pdf-card">
+        <div class="pdf-icon">📉</div>
+        <div class="pdf-name">Regresión Lineal</div>
+        <div class="pdf-meta">Estadística · Semestre VI</div>
+        <a href="finesi/gitcs2026/regresion%20lineal.pdf" download>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+          Descargar sílabo
+        </a>
+      </div>
+
+      <div class="pdf-card">
+        <div class="pdf-icon">⏱️</div>
+        <div class="pdf-name">Series de Tiempo</div>
+        <div class="pdf-meta">Estadística No Paramétrica · VI</div>
+        <a href="finesi/gitcs2026/series%20de%20tiempo.pdf" download>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 11l5 5 5-5M12 4v12"/></svg>
+          Descargar sílabo
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  Portal académico de <strong>Alex Angel Castillo Quilca</strong> &nbsp;·&nbsp; 
+  Universidad Nacional del Altiplano Puno &nbsp;·&nbsp; FINESI · GITCS 2026
+</footer>
+
 </body>
 </html>
